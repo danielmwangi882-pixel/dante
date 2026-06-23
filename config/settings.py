@@ -104,5 +104,12 @@ NOTIFY_LOGFILE  = True
 NOTIFY_WEBHOOK  = bool(os.getenv("WEBHOOK_URL"))
 WEBHOOK_URL     = os.getenv("WEBHOOK_URL", "")
 
+# Telegram
+NOTIFY_TELEGRAM     = bool(os.getenv("TELEGRAM_TOKEN"))
+TELEGRAM_TOKEN      = os.getenv("TELEGRAM_TOKEN", "")
+TELEGRAM_CHAT_ID    = os.getenv("TELEGRAM_CHAT_ID", "")
+# Minimum signal score to send Telegram alert (avoid noise)
+TELEGRAM_MIN_SCORE  = int(os.getenv("TELEGRAM_MIN_SCORE", 6))
+
 LOG_DIR    = "logs"
 REPORT_DIR = "reports"

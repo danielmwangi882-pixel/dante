@@ -23,6 +23,7 @@ from src.indicators import apply_all
 from src.signal_engine import SignalEngine
 from src.notifier import notify, print_summary_table
 from src.reporter import save_csv, save_html
+from src.telegram_bot import send_signal, send_scan_summary
 
 
 def scan(connector: MT5Connector, engine: SignalEngine,
@@ -51,11 +52,13 @@ def scan(connector: MT5Connector, engine: SignalEngine,
 
             if signal.direction != "NEUTRAL":
                 notify(signal)
+                send_signal(signal)
 
         except Exception as exc:
             print(f"[ERROR] {symbol}: {exc}")
 
     print_summary_table(all_signals)
+    send_scan_summary(all_signals)
 
     if save_report and all_signals:
         save_csv(all_signals)
