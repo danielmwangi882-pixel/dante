@@ -3,10 +3,12 @@ Dante — Swing Trading Signal Generator
 Supports: XAU/USD, EUR/USD, GBP/USD and more via MT5
 
 Usage:
-  python main.py            # single scan
-  python main.py --loop     # scan every SCAN_INTERVAL minutes
-  python main.py --demo     # force demo mode (no MT5 required)
-  python main.py --report   # save CSV + HTML report after scan
+  python main.py                        # single scan
+  python main.py --loop                 # scan every SCAN_INTERVAL minutes
+  python main.py --loop --interval 5   # scan every 5 minutes
+  python main.py --demo                 # force demo mode (no MT5 required)
+  python main.py --report               # save CSV + HTML report after scan
+  python main.py --loop --report        # loop and save report each scan
 """
 
 import sys
@@ -64,9 +66,11 @@ def scan(connector: MT5Connector, engine: SignalEngine,
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Dante Swing Signal Generator")
-    parser.add_argument("--loop",   action="store_true", help="Run on schedule")
-    parser.add_argument("--demo",   action="store_true", help="Demo mode (no MT5)")
-    parser.add_argument("--report", action="store_true", help="Save report after scan")
+    parser.add_argument("--loop",     action="store_true", help="Run on schedule")
+    parser.add_argument("--demo",     action="store_true", help="Demo mode (no MT5)")
+    parser.add_argument("--report",   action="store_true", help="Save report after scan")
+    parser.add_argument("--interval", type=int, default=None,
+                        help="Scan interval in minutes (overrides settings.py)")
     args = parser.parse_args()
 
     connector = MT5Connector()
@@ -80,10 +84,12 @@ def main() -> None:
 
     engine = SignalEngine()
 
+    interval = args.interval if args.interval is not None else SCAN_INTERVAL
+
     if args.loop:
-        print(f"[INFO] Scheduling scan every {SCAN_INTERVAL} minutes…")
+        print(f"[INFO] Scheduling scan every {interval} minutes…")
         scan(connector, engine, args.report)   # immediate first run
-        schedule.every(SCAN_INTERVAL).minutes.do(scan, connector, engine, args.report)
+        schedule.every(interval).minutes.do(scan, connector, engine, args.report)
         try:
             while True:
                 schedule.run_pending()
