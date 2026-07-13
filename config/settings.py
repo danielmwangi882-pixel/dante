@@ -113,3 +113,23 @@ TELEGRAM_MIN_SCORE  = int(os.getenv("TELEGRAM_MIN_SCORE", 6))
 
 LOG_DIR    = "logs"
 REPORT_DIR = "reports"
+
+# ── Auto-execution (trader.py) ────────────────────────────────────────────────
+
+# Minimum signal score required to place a real trade
+MIN_AUTO_TRADE_SCORE = int(os.getenv("MIN_AUTO_TRADE_SCORE", 7))
+
+# Risk per trade as % of account balance
+RISK_PCT_PER_TRADE = float(os.getenv("RISK_PCT_PER_TRADE", 1.0))
+
+# Maximum number of concurrently open Dante-managed trades
+MAX_OPEN_TRADES = int(os.getenv("MAX_OPEN_TRADES", 5))
+
+# Maximum allowed spread in pips before skipping entry
+MAX_SPREAD_PIPS = float(os.getenv("MAX_SPREAD_PIPS", 3.0))
+
+# Stop daily auto-trading if losses reach this % of account balance
+MAX_DAILY_LOSS_PCT = float(os.getenv("MAX_DAILY_LOSS_PCT", 5.0))
+
+# Move SL to breakeven automatically once TP1 is hit
+BREAKEVEN_AT_TP1 = os.getenv("BREAKEVEN_AT_TP1", "true").lower() == "true"
